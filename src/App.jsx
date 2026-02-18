@@ -10,10 +10,13 @@ import img5 from './assets/isla/crm.png'
 import img6 from './assets/isla/hrm.png'
 import img7 from './assets/isla/ims.png'
 import img8 from './assets/isla/exe.png'
+import img9 from './assets/isla/DSC05744.JPG'
+import img11 from './assets/isla/DSC07036.jpg'
+import img12 from './assets/isla/DSC08040.jpg'
 
 /* Additional images can be added here */
 
-const heroImages = [img1, img2, img3, img4]
+const heroImages = [img1, img2, img3, img4, img9, img11, img12]
 
 /* ===== DATA ===== */
 const services = [

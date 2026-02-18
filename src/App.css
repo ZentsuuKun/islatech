@@ -293,7 +293,7 @@
 
 .hero__subtitle {
   font-size: clamp(16px, 2vw, 20px);
-  color: #0f172a;
+  color: #ffffff;
   max-width: 600px;
   margin: 0 auto 48px;
   line-height: 1.7;

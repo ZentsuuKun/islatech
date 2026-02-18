@@ -22,7 +22,7 @@ const heroImages = [img1, img2, img3, img4, img9, img11, img12]
 const services = [
   {
     id: 'crm',
-    title: 'Islatel CRM',
+    title: 'IslaInsights',
     description: 'Powerful customer relationship management system. Track leads, manage bookings, monitor staff performance, and generate insightful reports.',
     icon: '📊',
     tags: ['Analytics', 'Leads', 'Reports'],

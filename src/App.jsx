@@ -14,6 +14,7 @@ import img8 from './assets/isla/exe.png'
 import img9 from './assets/isla/DSC05744.JPG'
 import img11 from './assets/isla/DSC07036.jpg'
 import img12 from './assets/isla/DSC08040.jpg'
+import img13 from './assets/isla/nps.png'
 
 /* Additional images can be added here */
 
@@ -71,9 +72,9 @@ const services = [
     icon: '⭐',
     tags: ['Public', 'Feedback', 'Net Promoter Score'],
     color: 'rose',
-    url: '#',
-    btnText: 'Coming Soon',
-    // No specific image yet
+    url: 'https://nps-survey-phi.vercel.app/',
+    btnText: 'Open NPS',
+    image: img13,
   },
   {
     id: 'website',

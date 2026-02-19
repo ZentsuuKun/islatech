@@ -45,7 +45,7 @@ const services = [
   {
     id: 'IMS',
     title: 'Inventory Management System',
-    description: 'software solution designed to track, manage, and optimize a company’s stock levels throughout the supply chain. It provides real-time visibility into what products are in stock, where they are located, and when they need to be replenished.',
+    description: 'Software solution designed to track, manage, and optimize a company’s stock levels throughout the supply chain. It provides real-time visibility into what products are in stock, where they are located, and when they need to be replenished.',
     icon: '📦',
     tags: ['Inventory', 'Stock', 'Supply Chain'],
     color: 'green',
@@ -56,7 +56,7 @@ const services = [
   {
     id: 'Exely',
     title: 'Exely',
-    description: 'an all-in-one hospitality software suite designed to help hotels, resorts, and vacation rentals increase their direct sales and streamline daily operations.',
+    description: 'An all-in-one hospitality software suite designed to help hotels, resorts, and vacation rentals increase their direct sales and streamline daily operations.',
     icon: '📅',
     tags: ['Hotel', 'Resort', 'Vacation Rentals'],
     color: 'amber',
@@ -66,7 +66,7 @@ const services = [
   }, {
     id: 'mainet',
     title: 'Net Promoter Score',
-    description: 'a simple metric used to measure customer loyalty and satisfaction. It asks customers how likely they are to recommend a product or service on a scale from 0–10, then categorizes them as Promoters, Passives, or Detractors to calculate an overall score.',
+    description: 'A simple metric used to measure customer loyalty and satisfaction. It asks customers how likely they are to recommend a product or service on a scale from 0–10, then categorizes them as Promoters, Passives, or Detractors to calculate an overall score.',
     icon: '⭐',
     tags: ['Public', 'Feedback', 'Net Promoter Score'],
     color: 'rose',
@@ -95,8 +95,9 @@ const stats = [
 
 
 
-function Navbar() {
+function Navbar({ darkMode, toggleDarkMode }) {
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -104,17 +105,75 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Close menu when clicking outside or on a link
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden' // Prevent scrolling when menu is open
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [menuOpen])
+
+  const toggleMenu = () => setMenuOpen(!menuOpen)
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setMenuOpen(false)
+  }
+
+  const scrollToServices = () => {
+    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })
+    setMenuOpen(false)
+  }
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-        <img src={logo} alt="Isla Tech" className="nav-brand__logo" />
-        <span className="nav-brand__text">IslaTech</span>
+    <>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-brand" onClick={scrollToTop}>
+          <img src={logo} alt="Isla Tech" className="nav-brand__logo" />
+          <span className="nav-brand__text">IslaTech</span>
+        </div>
+
+        {/* Desktop Links */}
+        <div className="nav-links">
+          <button className="nav-link" onClick={scrollToTop}>Home</button>
+          <button className="nav-link" onClick={scrollToServices}>Services</button>
+          <button
+            className="nav-link theme-toggle"
+            onClick={toggleDarkMode}
+            aria-label="Toggle theme"
+            style={{ fontSize: '18px', display: 'flex', alignItems: 'center' }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} onClick={toggleMenu} aria-label="Toggle Navigation">
+          <span className="nav-toggle__bar"></span>
+          <span className="nav-toggle__bar"></span>
+          <span className="nav-toggle__bar"></span>
+        </button>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu__content">
+          <button className="mobile-menu__link" onClick={scrollToTop}>Home</button>
+          <button className="mobile-menu__link" onClick={scrollToServices}>Services</button>
+          <button
+            className="mobile-menu__link"
+            onClick={toggleDarkMode}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+          >
+            {darkMode ? 'Light Mode ☀️' : 'Dark Mode 🌙'}
+          </button>
+        </div>
       </div>
-      <div className="nav-links">
-        <button className="nav-link nav-link--active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</button>
-        <button className="nav-link" onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}>Services</button>
-      </div>
-    </nav>
+    </>
   )
 }
 
@@ -222,14 +281,30 @@ function HeroCarousel() {
 /* ===== MAIN APP ===== */
 function App() {
   const [visible, setVisible] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme')
+    return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  })
 
   useEffect(() => {
     setVisible(true)
   }, [])
 
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.body.classList.remove('dark-mode')
+      localStorage.setItem('theme', 'light')
+    }
+  }, [darkMode])
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev)
+
   return (
     <div className="app">
-      <Navbar />
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 
       {/* Hero Section */}
       <section className="hero">

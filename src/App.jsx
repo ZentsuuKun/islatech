@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { flushSync } from 'react-dom'
 import './App.css'
 import logo from './assets/logo.png'
 
@@ -300,7 +301,58 @@ function App() {
     }
   }, [darkMode])
 
-  const toggleDarkMode = () => setDarkMode(prev => !prev)
+  /* Circle Expand Transition Logic */
+  const toggleDarkMode = async (e) => {
+    // If the browser doesn't support View Transitions, just update state
+    if (!document.startViewTransition) {
+      setDarkMode(prev => !prev)
+      return
+    }
+
+    // Capture the click position or default to center
+    const x = e?.clientX ?? window.innerWidth / 2
+    const y = e?.clientY ?? window.innerHeight / 2
+
+    // Get the hypotenuse to the furthest corner
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+
+    // Start the transition
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setDarkMode(prev => !prev)
+      })
+    })
+
+    // Wait for the pseudo-elements to be created
+    await transition.ready
+
+    // Animate the clip-path
+    // Determine which pseudo-element to animate based on direction
+    // If going to Dark (darkMode becomes true), expanding the NEW view (dark).
+    // If going to Light (darkMode becomes false), expanding the NEW view (light).
+    // Actually, usually we expand the NEW view over the OLD one.
+
+    // The key here is: The NEW view is the one we want to reveal in a circle.
+    // So we animate ::view-transition-new(root) from r=0 to r=endRadius.
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`
+        ]
+      },
+      {
+        duration: 500,
+        easing: 'ease-in-out',
+        // We target the new view's pseudo-element
+        pseudoElement: '::view-transition-new(root)',
+      }
+    )
+  }
 
   return (
     <div className="app">

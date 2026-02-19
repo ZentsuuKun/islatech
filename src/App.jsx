@@ -284,7 +284,9 @@ function App() {
   const [visible, setVisible] = useState(false)
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme')
-    return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    // Default to light (false) unless explicitly 'dark' or if no preference but system prefers dark (optional, but let's stick to explicit light preference first)
+    // Actually simplicity: Default to light unless 'dark' is saved.
+    return savedTheme === 'dark'
   })
 
   useEffect(() => {
